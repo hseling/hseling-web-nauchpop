@@ -16,7 +16,7 @@ x-common-variables: &common-variables
 
 services:
  hse-api-web:
-  image: hseling/hseling-api-template:latest
+  image: hseling/hseling-api-nauchpop:latest
   ports:
    - "80:80"
   links:
@@ -27,7 +27,7 @@ services:
   environment: *common-variables
 
  hse-api-celery:
-  image: hseling/hseling-api-template:latest
+  image: hseling/hseling-api-nauchpop:latest
   command: celery -A main.celery worker
   links:
    - redis
