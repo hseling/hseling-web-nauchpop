@@ -13,15 +13,16 @@
       <div class="container-fluid">
           <div class="row">
             <h1>Popular Science Text Analysis Service</h1>
+
           </div>
           <div class="row">
               <nav class="navbar navbar-default">
                   <div class="container-fluid">
                     <ul class="nav navbar-nav">
                       <li class="active"><a href="#">Home</a></li>
-                      <li><a href="#">About the project</a></li>
-                      <li><a href="#">API Documentation</a></li>
-                      <li><a href="#">Contact</a></li>
+                      <li><a href="about">About the project</a></li>
+                      <li><a href="documentation">API Documentation</a></li>
+                      <li><a href="contact">Contact</a></li>
                     </ul>
                   </div>
                 </nav>
@@ -41,31 +42,12 @@
               </p>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">
-                <label id="methods">Select methods</label>
-                <div class="checkbox">
-                    <label><input type="checkbox" value="">Named Entities</label>
-                  </div>
-                  <div class="checkbox">
-                    <label><input type="checkbox" value="">Term Extraction</label>
-                  </div>
-                  <div class="checkbox">
-                    <label><input type="checkbox" value="">Text classification</label>
-                  </div> 
-                  <div class="checkbox">
-                      <label><input type="checkbox" value="">Readability</label>
-                  </div> 
-            </div>
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <label id="user_text" for="user_text">Insert your text here</label>
-                    <textarea class="form-control" rows="4" id="comment"></textarea>
-                    <button type="button" class="btn btn-primary active btn-lg">Process text</button>
-                    <div id="upload_files" class="inline">
-                        {% block content %}
-                        {% endblock %}
+                    <div id="process_text" class="inline">
+                        {% include "methods.html" %}
+                    </div>
+                    <div id="upload_file" class="inline">
+                      {% block content %}
+                      {% endblock %}
                     </div>
                 </div>
               </div>

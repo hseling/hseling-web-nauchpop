@@ -2,7 +2,6 @@
 
 {% block content %}
 {% if form %}
-<!--<h3 class="display-4">Upload</h3>-->
 <form method=post enctype=multipart/form-data>
   {% csrf_token %}
   {{ form }}
