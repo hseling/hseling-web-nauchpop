@@ -13,8 +13,13 @@ HSE_API_ROOT = "http://hse-api-web/"
 
 # Create your views here.
 def web_index(request):
-    return render(request, 'index.html',
-                  context={})
+    form = ProcessTextForm()
+    if request.method == 'POST':
+        form = ProcessTextForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+    return render(request, 'index.html', 
+            context={'form':form})
 
 def web_about(request):
     return render(request, 'about.html',
@@ -52,13 +57,6 @@ class ProcessTextForm(forms.Form):
     term_extraction = forms.BooleanField(required=False)
     text_classification = forms.BooleanField(required=False)
     readability = forms.BooleanField(required=False)
-
-def web_methods(request):
-    if request.method == 'POST':
-        form = ProcessTextForm(request.POST)
-        if form.is_valid():
-            text = form.cleaned_data['text']
-    return render(request, 'methods.html', {'form':form})
 
 def handle_uploaded_file(f):
     files = {'file': f}
