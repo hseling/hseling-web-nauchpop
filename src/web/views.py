@@ -84,13 +84,14 @@ def handle_uploaded_file(f):
     content = requests.post(url, files=files)
     file_id = content.json().get("file_id")
 
-    if file_id:
-        file_id = file_id[7:]
-        url = HSE_API_ROOT + "process/" + file_id
-        content = requests.get(url)
+    #if file_id:
+    #    file_id = file_id[7:]
+    #    url = HSE_API_ROOT + "process/" + file_id
+    #    content = requests.get(url)
 
-    else:
-        return content.json().get('task_id')
+    #else:
+    #    return content.json().get('task_id')
+    return file_id
 
 
 
@@ -102,4 +103,4 @@ def web_upload_file(request):
             return HttpResponseRedirect('main?task_id=' + task_id)
     else:
         form = UploadFileForm()
-    return render(request, 'main.html', {'form': form})
+    return render(request, 'main.html', {'form_upload': form})
