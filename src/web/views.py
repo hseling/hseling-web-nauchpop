@@ -41,7 +41,8 @@ def web_index(request):
             readability = form.cleaned_data['readability']
             methods = select_methods_string(ner, term_extraction, 
                                             text_classification, readability)
-            post_form_data(methods)
+            if text:
+                post_form_data(methods)
     return render(request, 'index.html', 
             context={'form':form})
 
