@@ -11,15 +11,41 @@ logger = logging.getLogger(__name__)
 
 HSE_API_ROOT = "http://hse-api-web/"
 
-# Create your views here.
+def select_methods_string(ner, term_extraction, text_classification, readability):
+    methods = []
+    if ner == True:
+        methods.append('ner')
+    if term_extraction == True:
+        methods.append('term')
+    if text_classification == True:
+        methods.append('topic')
+    if readability == True:
+        methods.append('rb')
+    
+    return ', '.join(methods)
+
+def save_user_text(text):
+    with open('/opt/code/web/tmp/user_text.txt', 'w') as fo:
+        fo.write(text)
+
 def web_index(request):
     form = ProcessTextForm()
     if request.method == 'POST':
         form = ProcessTextForm(request.POST)
         if form.is_valid():
-            text = form.cleaned_data['text']
+            save_user_text(form.cleaned_data['text'])
+            ner = form.cleaned_data['ner']
+            term_extraction = form.cleaned_data['term_extraction']
+            text_classification = form.cleaned_data['text_classification']
+            readability = form.cleaned_data['readability']
+            methods = select_methods_string(ner, term_extraction, 
+                                            text_classification, readability)
+            post_form_data(methods)
     return render(request, 'index.html', 
             context={'form':form})
+
+def post_form_data(methods):
+    return requests.post(url=HSE_API_ROOT + 'process', data=methods)
 
 def web_about(request):
     return render(request, 'about.html',
