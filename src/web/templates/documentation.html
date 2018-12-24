@@ -1,12 +1,72 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Documentation</title>
-</head>
+    <link rel="stylesheet" type="text/css" href="{% static "node_modules/patternfly/dist/css/patternfly.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "node_modules/patternfly/dist/css/patternfly-additions.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "styles.css" %}">
+  </head>
 <body>
-    Add documentation here
+    <div class="container-fluid">
+            <div class="row">
+                  <h1>Popular Science Text Analysis Service</h1>
+      
+                </div>
+                <div class="row">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                          <ul class="nav navbar-nav">
+                            <li><a href="./">Home</a></li>
+                            <li><a href="about">About the project</a></li>
+                            <li class="active"><a href="#">API Documentation</a></li>
+                            <li><a href="contact">Contact</a></li>
+                          </ul>
+                        </div>
+                  </nav>
+        </div>
+
+        <div class="row">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-8">
+                  <h2>Project Documentation</h2>
+                  <h3>NER module</h3> 
+                   <p>
+                       <i>Module description</i>
+                  </p>
+                  <h3>Readability module</h3> 
+                   <p>
+                       <i>Module description</i>
+                  </p> 
+
+                  <h3>Term extraction module</h3> 
+                  <p>
+                      <i>Module description</i>
+                 </p>
+                 <h3>Topic modeling module</h3> 
+                  <p>
+                      <i>Module description</i>
+                 </p> 
+                </div>
+            </div>
+            </div>
+
+
+
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="col-12 col-md" align="center">
+              <img class="mb-2" src="{% static "../../assets/brand/bootstrap-solid.svg" %}" alt="" width="24" height="24">
+              <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
+  
+  
+            </div>
+        </footer>
+
 </body>
+<script src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script>
+<script src="{% static "node_modules/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+<script src="{% static "main.js" %}"></script>
 </html>
