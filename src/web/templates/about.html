@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="{% static "node_modules/patternfly/dist/css/patternfly.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "node_modules/patternfly/dist/css/patternfly-additions.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "styles.css" %}">
+    <title>About</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <h1>Popular Science Text Analysis Service</h1>
+         </div>
+         <div class="row">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                      <ul class="nav navbar-nav">
+                        <li><a href="./">Home</a></li>
+                        <li class="active"><a href="#">About the project</a></li>
+                        <li><a href="documentation">API Documentation</a></li>
+                        <li><a href="contact">Contact</a></li>
+                      </ul>
+                    </div>
+                  </nav>
+            </div>
+            <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-8">
+                        <h2>About the project</h2>
+                        <p>This web-instrument is based an M.A. educational project on computational linguistics. 
+                            The goal of the project was to analyze the Russian segment of popular science websites using tools and methods of computational linguistics.
+                        </p>
+                        <p> Here you can check your text for scientiest's mentions and specific terms. Also you can identify it's 
+                            scientific field and estimate readability of the text. 
+                            </p>
+                       <p>Our projects is specified for science-popular texts in russian.
+                       </p>
+                      
+                    </div>
+                </div>
+    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+            <div class="col-12 col-md" align="center">
+              <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
+  
+  
+            </div>
+        </footer>
+</body>
+<script src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script>
+<script src="{% static "node_modules/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+<script src="{% static "main.js" %}"></script>
+</html>

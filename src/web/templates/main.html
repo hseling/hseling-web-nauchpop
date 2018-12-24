@@ -1,20 +1,14 @@
 {% extends 'base.html' %}
 
-{% block menu %}
-<a class="p-2 text-dark" href=".">Index</a>
-<a class="p-2 text-dark" href="upload">Upload &amp; Process</a>
-{% endblock %}
-
 {% block content %}
-{% if form %}
-<h1 class="display-4">Upload</h1>
+{% if form_upload %}
 <form method=post enctype=multipart/form-data>
   {% csrf_token %}
-  {{ form }}
-  <button type="submit" class="btn btn-lg btn-primary">Upload</button>
+  {{ form_upload }}
+  <button type="submit" class="btn btn-lg btn-primary">Upload files</button>
 </form>
 {% else %}
-<h1 class="display-4">Processed</h1>
+<h3 class="display-4">Processed</h3>
 <p class="lead"></p>
 <pre class="raw"></pre>
 {% endif %}

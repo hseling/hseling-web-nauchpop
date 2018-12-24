@@ -7,4 +7,7 @@ urlpatterns = [
     url(r'^main$', views.web_main, name='main'),
     url(r'^upload$', views.web_upload_file, name='upload'),
     url(r'^status$', views.web_status, name='status'),
+    url(r'^about$', views.web_about, name='about'),
+    url(r'^documentation$', views.web_documentation, name='documentation'),
+    url(r'^contact$', views.web_contact, name='contact')
 ]
