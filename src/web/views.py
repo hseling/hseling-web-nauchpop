@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django import forms
+from .forms import UploadFileForm
+from .forms import ProcessTextForm
 
 import requests
 import logging
@@ -77,13 +78,6 @@ def web_status(request):
         return JsonResponse(result)
     return JsonResponse({"error": "No task id"})
 
-class ProcessTextForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea, required=False)
-    ner = forms.BooleanField(required=False)
-    term_extraction = forms.BooleanField(required=False)
-    text_classification = forms.BooleanField(required=False)
-    readability = forms.BooleanField(required=False)
-
 def handle_uploaded_file(f):
     files = {'file': f}
     url = HSE_API_ROOT + "upload"
@@ -97,10 +91,6 @@ def handle_uploaded_file(f):
 
     else:
         return content.json().get('task_id')
-
-
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
 
 
 
