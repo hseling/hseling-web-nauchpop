@@ -5,10 +5,10 @@
 <form method=post enctype=multipart/form-data>
   {% csrf_token %}
   {{ form_upload }}
-  <button type="submit" class="btn btn-lg btn-primary">Upload files and process</button>
+  <button type="submit" class="btn btn-lg btn-primary">Обработать файл</button>
 </form>
 {% else %}
-<h3 class="display-4">Processed</h3>
+<h3 class="display-4">Завершено</h3>
 <p class="lead"></p>
 <pre class="raw"></pre>
 {% endif %}
@@ -19,7 +19,7 @@
 <form method=post enctype=multipart/form-data>
   {% csrf_token %}
   {{ form_text }}
-  <button type="submit" class="btn btn-lg btn-primary">Process</button>
+  <button type="submit" class="btn btn-lg btn-primary">Обработать</button>
 </form>
 <!--{% else %}-->
 <!--<h3 class="display-4">None</h3>-->
