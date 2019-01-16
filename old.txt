@@ -1,6 +1,0 @@
-This service is designed specifically for popular science texts in Russian. 
-                It implements four methods for textual analysis: named entity recognition which extracts
-                scholars' names from the text, term extraction, text classification which assigns rubrics for the text
-                and readability metrics to define text complexity.
-To process a single text, copy your text to the text area, if you wish to process more
-                use 
