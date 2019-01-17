@@ -1,32 +1,42 @@
-function getUrlVars()
+
+
+function getTaskIds()
 {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
+    var rtn = [],
+        params = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < params.length; i++)
     {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
+        var param = params[i].split('='),
+            key = param[0],
+            value = param[1].split(',');
+
+        if (key == 'task_id') {
+
+            for (var j = 0; j < value.length; j++) {
+                rtn[j] = value[j];
+            }
+        }
     }
-    return vars;
+    console.log(rtn)
+    return rtn;
 }
 
-$(function () {
-  var vars = getUrlVars(),
-      task_id = vars["task_id"];
 
-  if(task_id) {
-    var get_status = function () {
-      $.get("/web/status?task_id=" + task_id, function(data) {
+function get_status(task_id) {
+    $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
-          $(".lead").text(data.result);
-          $(".raw").text(data.raw);
+          $(".lead").append('<p>' + data.result + '</p>');
+          $(".raw").append('<p>' + data.raw + '</p>');
         } else {
           setTimeout(get_status, 2000);
         }
       });
-    };
+};
 
-    get_status();
-  }
+
+$(function () {
+  var taskIds = getTaskIds();
+    for (var i = 0; i < taskIds.length; i++) {
+        get_status(taskIds[i]);
+    }
 });

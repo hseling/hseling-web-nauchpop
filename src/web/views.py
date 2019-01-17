@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from .forms import UploadFileForm
 from .forms import TypeInTextForm
 from django.views.decorators.csrf import csrf_protect
+from langdetect import detect
+from io import BytesIO
 # from .forms import FileFieldForm
 # from django.views.generic.edit import FormView
 
@@ -60,8 +62,9 @@ def web_contact(request):
 
 def web_main(request):
     return render(request, 'main.html',
-                  context={"status": request.GET.get('status')})
+                  context={})
 
+# context={"status": request.GET.get('status')}
 
 def web_status(request):
     task_id = request.GET.get('task_id')
@@ -95,7 +98,6 @@ def handle_uploaded_file(f, modules):
 
     return response
 
-# def web_process_file(request):
 
 @csrf_protect
 def web_upload_file(request):
@@ -106,12 +108,13 @@ def web_upload_file(request):
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
             task_ids = handle_uploaded_file(request.FILES['file'], modules)
-            task_ids = '&'.join(task_ids)
+            task_ids = ','.join(task_ids)
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
         form = UploadFileForm()
     return render(request, 'main.html', {'form_upload': form})
 
+@csrf_protect
 def web_type_in(request):
     if request.method == 'POST':
         form = TypeInTextForm(request.POST, request.FILES)
@@ -119,14 +122,13 @@ def web_type_in(request):
             modules = list(filter(lambda t: t[0] in form.cleaned_data['modules'], form.fields['modules'].choices))
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
-            file = open('test.txt', 'rb+')
+            file = open('temporary.txt', 'rb+')
             subject = form.cleaned_data['text']
             subject = bytes(subject, encoding='utf-8')
             file.write(subject)
-            # file.close()
-            task_ids = handle_uploaded_file(file, modules)
             file.close()
-
+            task_ids = handle_uploaded_file('/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt', modules)
+            # '/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt'
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
         form = TypeInTextForm()

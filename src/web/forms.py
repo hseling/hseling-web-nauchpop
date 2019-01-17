@@ -1,4 +1,5 @@
 from django import forms
+from langdetect import detect
 
 # class ProcessTextForm(forms.Form):
 #     text = forms.CharField(widget=forms.Textarea, required=False, initial='Type your text here')
@@ -20,9 +21,12 @@ class UploadFileForm(forms.Form):
                                                 choices=MODULE_CHOICES)
 
 class TypeInTextForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea, required=False, initial='Type your text here', max_length=6000)
+    text = forms.CharField(widget=forms.Textarea, required=True, initial='Type your text here', max_length=6000)
     modules = forms.MultipleChoiceField(required=False,
                                         widget=forms.CheckboxSelectMultiple,
                                         choices=MODULE_CHOICES)
+    # if detect(text) != 'ru':
+    #     raise forms.ValidationError("Did not send for 'help' in "
+    #                                 "the subject despite CC'ing yourself.")
 # class FileFieldForm(forms.Form):
 #     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
