@@ -18,10 +18,27 @@ nav {font-size: 16px;}
 #methods {font-size: 16px;}
 .form-control {font-size: 16px;}
 
-.inline {
+#upload_file{
     display:inline-block;
     margin-right:5px;
-    margin-left: 10px;
- }
+}
+#type_in{
+    display:inline-block;
+    margin-right:5px;
+    margin-left: 40px;
+}
 
-.lead {font-size: 16px;}
+
+.lead {font-size: 12px;}
+.raw {font-size: 16px;}
+
+table, tr, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+th {font-size: 16px;}
