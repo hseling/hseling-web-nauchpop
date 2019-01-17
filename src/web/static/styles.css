@@ -48,7 +48,8 @@ th {font-size: 16px;}
     font-family: monospace;
 }
 footer {
-    position: fixed;
-    bottom: 0px;
+    bottom: 10px;
 
 }
+small{margin-left: 100px;
+      margin-top: 50px;}
