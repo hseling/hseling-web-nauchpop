@@ -30,7 +30,7 @@
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-8">
-              <h2>Что это?</h2>
+              <h2>Что умеет анализатор?</h2>
               <p>Анализатор разработан для обработки научно-популярных текстов на русском языке. 
                 С его помощью можно извлечь из текстов имена ученых, научные термины, 
                 опредилить тематику текстов и вывести метрики ридабилити для оценки уровня сложности текста. 
@@ -41,17 +41,18 @@
               </p>
             </div>
         </div>
-                    <div id="upload_file" class="inline">
-                        {% block content %}
-                        {% endblock %}
-                    </div>
-                    <div id="type_in" class="inline">
-                        {% block window %}
-                        {% endblock %}
-                    </div>
-                </div>
-            <div class="col-sm-3">
-            </div>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1 inline" id="upload_file">
+              {% block content %}
+              {% endblock %}
+          </div>
+          <div class="col-sm-1 inline" id="type_in">
+              {% block window %}
+              {% endblock %}
+          </div>
+        </div>
+
   
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
             <div class="col-12 col-md" align="center">

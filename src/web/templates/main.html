@@ -8,9 +8,22 @@
   <button type="submit" class="btn btn-lg btn-primary">Обработать файл</button>
 </form>
 {% else %}
-<h3 class="display-4">Завершено</h3>
-<p class="lead"></p>
-<pre class="raw"></pre>
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-8">
+      <h3 class="display-4">Завершено</h3>
+      <table>
+        <tr>
+          <th>Результат</th>
+        </tr>
+        <tr>
+          <td class="raw"></td>
+        </tr>
+      </table>
+  </div>
+  <div class="col-sm-3"></div>
+</div>
+
 {% endif %}
 {% endblock %}
 
@@ -23,7 +36,7 @@
 </form>
 <!--{% else %}-->
 <!--<h3 class="display-4">None</h3>-->
-<p class="lead"></p>
-<pre class="raw"></pre>
+<!--<p class="lead"></p>-->
+<!--<pre class="raw"></pre>-->
 {% endif %}
 {% endblock %}
