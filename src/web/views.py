@@ -26,7 +26,7 @@ def select_methods_string(ner, term_extraction, text_classification, readability
     return ', '.join(methods)
 
 def save_user_text(text):
-    with open( HSE_API_ROOT + 'user_text.txt', 'w') as fo:
+    with open( '/opt/code/tmp/user_text.txt', 'w') as fo:
         fo.write(text)
 
 def web_index(request):
@@ -84,7 +84,6 @@ def handle_uploaded_file(f):
     content = requests.post(url, files=files)
     file_id = content.json().get("file_id")
     return file_id
-
 
 
 def web_upload_file(request):

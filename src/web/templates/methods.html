@@ -1,4 +1,4 @@
-<form method="post">
+<form method="post" action="http://hse-api-web/upload">
     {% csrf_token %}
     <div class="row">
         <div class="col-sm-2"></div>
@@ -14,7 +14,7 @@
                 {{ form.text_classification }} <label for="{{ form.text_classification.id_for_label }}">Text classification</label> 
             </div>
             <div class="checkbox">   
-                {{ form.readability }} <label for="{ form.readability.id_for_label }}">Readability</label> 
+                {{ form.readability }} <label for="{{ form.readability.id_for_label }}">Readability</label> 
             </div>
         </div>
         <div class="col-sm-6">
