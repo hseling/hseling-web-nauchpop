@@ -42,3 +42,13 @@ table, tr, th, td {
   }
 
 th {font-size: 16px;}
+
+.query {
+    background-color: #f5f5f5;
+    font-family: monospace;
+}
+footer {
+    position: fixed;
+    bottom: 0px;
+
+}
