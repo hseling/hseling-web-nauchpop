@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^status$', views.web_status, name='status'),
     url(r'^about$', views.web_about, name='about'),
     url(r'^documentation$', views.web_documentation, name='documentation'),
-    url(r'^contact$', views.web_contact, name='contact')
+    url(r'^contact$', views.web_contact, name='contact') 
 ]

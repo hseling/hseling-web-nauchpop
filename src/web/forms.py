@@ -8,10 +8,10 @@ from django import forms
 #     text_classification = forms.BooleanField(required=False)
 #     readability = forms.BooleanField(required=False)
 MODULE_CHOICES = (
-    ('ner', 'Named Entities'),
-    ('topic', 'Text classification'),
-    ('rb', 'Readability'),
-    ('term', 'Term extraction'),
+    ('ner', 'Имена ученых'),
+    ('topic', 'Тематика'),
+    ('rb', 'Ридабилити'),
+    ('term', 'Термины'),
 )
 
 class UploadFileForm(forms.Form):
@@ -21,7 +21,7 @@ class UploadFileForm(forms.Form):
                                                 choices=MODULE_CHOICES)
 
 class TypeInTextForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea, required=True, initial='Type your text here', max_length=6000)
+    text = forms.CharField(widget=forms.Textarea, required=False, initial='Введите текст', max_length=6000)
     modules = forms.MultipleChoiceField(required=False,
                                         widget=forms.CheckboxSelectMultiple,
                                         choices=MODULE_CHOICES)

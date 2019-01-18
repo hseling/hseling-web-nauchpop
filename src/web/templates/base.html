@@ -12,17 +12,17 @@
   <body>
       <div class="container-fluid">
           <div class="row">
-            <h1>Popular Science Text Analysis Service</h1>
+            <h1>Анализатор Научно-Популярных Текстов</h1>
 
           </div>
           <div class="row">
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                   <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="about">About the project</a></li>
-                    <li><a href="documentation">API Documentation</a></li>
-                    <li><a href="contact">Contact</a></li>
+                    <li class="active"><a href="#">Главная</a></li>
+                    <li><a href="about">О проекте</a></li>
+                    <li><a href="documentation">Документация</a></li>
+                    <li><a href="contact">Контакты</a></li>
                   </ul>
                 </div>
               </nav>
@@ -30,37 +30,38 @@
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-sm-8">
-              <h2>Text processing HOW TO</h2>
-              <p>This service is designed specifically for popular science texts in Russian. 
-                It implements four methods for textual analysis: named entity recognition which extracts
-                scholars' names from the text, term extraction, text classification which assigns rubrics for the text
-                and readability metrics to define text complexity.
+              <h2>Что умеет анализатор?</h2>
+              <p>Анализатор разработан для обработки научно-популярных текстов на русском языке. 
+                С его помощью можно извлечь из текстов имена ученых, научные термины, 
+                опредилить тематику текстов и вывести метрики ридабилити для оценки уровня сложности текста. 
               </p>
               <p style="margin-bottom: 40px;">
-                To process a single text, copy your text to the text area, if you wish to process more
-                use <b>Upload Files</b> button. 
+                Для обработки текста нажмите на кнопку <b>Ввести текст</b> 
+                или загрузите текст из файла с помощью кнопки <b>Загрузить файл</b>. 
               </p>
             </div>
         </div>
-                    <div id="upload_file" class="inline">
-                        {% block content %}
-                        {% endblock %}
-                    </div>
-                    <div id="type_in" class="inline">
-                        {% block window %}
-                        {% endblock %}
-                    </div>
-                </div>
-            <div class="col-sm-3">
-            </div>
-  
-        <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="col-12 col-md" align="center">
-              <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
-  
-  
-            </div>
-        </footer>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-1 inline" id="upload_file">
+              {% block content %}
+              {% endblock %}
+          </div>
+          <div class="col-sm-1 inline" id="type_in">
+              {% block window %}
+              {% endblock %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4">
+              <footer>
+                  <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
+              </footer>
+          </div>
+          <div class="col-sm-4"></div>
+        </div>
 
   </body>
   <script src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script>

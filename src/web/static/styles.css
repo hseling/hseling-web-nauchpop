@@ -4,6 +4,8 @@ h2 {font-size: 30px;
     margin-bottom: 30px;}
 p {font-size: 18px;
    line-height: 30px;}
+li {font-size: 18px;
+    line-height: 30px;}
 .form-group {font-size: 16px;}
 nav {font-size: 16px;}
 #button-t {margin:10px 10px 10 px 10px;
@@ -16,10 +18,38 @@ nav {font-size: 16px;}
 #methods {font-size: 16px;}
 .form-control {font-size: 16px;}
 
-.inline {
+#upload_file{
     display:inline-block;
     margin-right:5px;
-    margin-left: 10px;
- }
+}
+#type_in{
+    display:inline-block;
+    margin-right:5px;
+    margin-left: 40px;
+}
 
-.lead {font-size: 16px;}
+
+.lead {font-size: 12px;}
+.raw {font-size: 16px;}
+
+table, tr, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+th {font-size: 16px;}
+
+.query {
+    background-color: #f5f5f5;
+    font-family: monospace;
+}
+footer {
+    bottom: 10px;
+
+}
+small{margin-left: 100px;
+      margin-top: 50px;}
