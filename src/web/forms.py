@@ -1,12 +1,7 @@
 from django import forms
 
 
-# class ProcessTextForm(forms.Form):
-#     text = forms.CharField(widget=forms.Textarea, required=False, initial='Type your text here')
-#     ner = forms.BooleanField(required=False)
-#     term_extraction = forms.BooleanField(required=False)
-#     text_classification = forms.BooleanField(required=False)
-#     readability = forms.BooleanField(required=False)
+
 MODULE_CHOICES = (
     ('ner', 'Имена ученых'),
     ('topic', 'Тематика'),

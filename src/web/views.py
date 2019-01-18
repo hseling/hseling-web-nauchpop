@@ -18,34 +18,10 @@ logger = logging.getLogger(__name__)
 HSE_API_ROOT = "http://hse-api-web/"
 
 
-# def save_user_text(text):
-#     # with open( HSE_API_ROOT + 'user_text.txt', 'w') as fo:
-#     with open('/opt/code/tmp/user_text.txt', 'w') as fo:
-#         fo.write(text)
 def web_index(request):
     return render(request, 'index.html',
                   context={})
-# def web_index(request):
-#     form = ProcessTextForm()
-#     if request.method == 'POST':
-#         form = ProcessTextForm(request.POST)
-#         if form.is_valid():
-#             # save_user_text(form.cleaned_data['text'])
-#             ner = form.cleaned_data['ner']
-#             term_extraction = form.cleaned_data['term_extraction']
-#             text_classification = form.cleaned_data['text_classification']
-#             readability = form.cleaned_data['readability']
-#             methods = select_methods_string(ner, term_extraction,
-#                                             text_classification, readability)
-#
-#             post_form_data(methods)
-#     return render(request, 'index.html',
-#             context={'form':form})
 
-
-
-# def post_form_data(methods):
-#     return requests.post(url=HSE_API_ROOT + 'process', data=methods)
 
 def web_about(request):
     return render(request, 'about.html',
@@ -139,11 +115,6 @@ def web_type_in(request):
             modules = list(filter(lambda t: t[0] in form.cleaned_data['modules'], form.fields['modules'].choices))
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
-            # with open('temporary.txt', 'rb+') as file:
-            #     # myfile = File(file)
-            #     subject = form.cleaned_data['text']
-            #     subject = bytes(subject, encoding='utf-8')
-            #     file.write(subject)
             file = open(settings.MEDIA_ROOT + 'temporary.txt', 'wb')
             myfile = File(file)
             subject = form.cleaned_data['text']
@@ -153,9 +124,6 @@ def web_type_in(request):
             file.close()
             task_ids = handle_text(modules)
             task_ids = ','.join(task_ids)
-
-            # task_ids = handle_uploaded_file('/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt', modules)
-            # '/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt'
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
         form = TypeInTextForm()
