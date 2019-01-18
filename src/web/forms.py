@@ -1,5 +1,5 @@
 from django import forms
-from langdetect import detect
+
 
 # class ProcessTextForm(forms.Form):
 #     text = forms.CharField(widget=forms.Textarea, required=False, initial='Type your text here')

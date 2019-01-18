@@ -3,11 +3,11 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from .forms import UploadFileForm
 from .forms import TypeInTextForm
 from django.views.decorators.csrf import csrf_protect
-from langdetect import detect
+from django.core.files import File
 from io import BytesIO
 # from .forms import FileFieldForm
 # from django.views.generic.edit import FormView
-
+from templatesite import settings
 import requests
 import logging
 
@@ -98,6 +98,23 @@ def handle_uploaded_file(f, modules):
 
     return response
 
+def handle_text(modules):
+    files = {'file': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
+    url = HSE_API_ROOT + "upload"
+    content = requests.post(url, files=files)
+    file_id = content.json().get("file_id")
+
+    if file_id:
+        file_id = file_id[7:]
+        url = HSE_API_ROOT + "process/" + file_id
+        content = requests.post(url, data=modules)
+
+
+    else:
+        raise Exception(content.json())
+    response = list(content.json().values())
+
+    return response
 
 @csrf_protect
 def web_upload_file(request):
@@ -122,12 +139,22 @@ def web_type_in(request):
             modules = list(filter(lambda t: t[0] in form.cleaned_data['modules'], form.fields['modules'].choices))
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
-            file = open('temporary.txt', 'rb+')
+            # with open('temporary.txt', 'rb+') as file:
+            #     # myfile = File(file)
+            #     subject = form.cleaned_data['text']
+            #     subject = bytes(subject, encoding='utf-8')
+            #     file.write(subject)
+            file = open(settings.MEDIA_ROOT + 'temporary.txt', 'wb')
+            myfile = File(file)
             subject = form.cleaned_data['text']
             subject = bytes(subject, encoding='utf-8')
-            file.write(subject)
+            myfile.write(subject)
+            myfile.close()
             file.close()
-            task_ids = handle_uploaded_file('/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt', modules)
+            task_ids = handle_text(modules)
+            task_ids = ','.join(task_ids)
+
+            # task_ids = handle_uploaded_file('/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt', modules)
             # '/home/natalia-s/Documents/web-app/hseling-web-nauchpop/src/temporary.txt'
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:

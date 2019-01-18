@@ -17,12 +17,12 @@ function getTaskIds()
             }
         }
     }
-    console.log(rtn)
     return rtn;
 }
 
 
-function get_status(task_id) {
+function get_status(task_id)
+{
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
           $(".lead").append('<p>' + data.result + '</p>');
@@ -36,6 +36,7 @@ function get_status(task_id) {
 
 $(function () {
   var taskIds = getTaskIds();
+  console.log(taskIds);
     for (var i = 0; i < taskIds.length; i++) {
         get_status(taskIds[i]);
     }

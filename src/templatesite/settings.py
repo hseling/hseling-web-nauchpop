@@ -162,6 +162,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/opt/static/'
 
+MEDIA_ROOT = '/opt/media/'
 
 LOGGING = {
     'version': 1,
