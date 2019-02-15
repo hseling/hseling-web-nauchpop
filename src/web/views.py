@@ -127,4 +127,4 @@ def web_type_in(request):
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
         form = TypeInTextForm()
-    return render(request, 'main.html', {'form_text': form})
+    return render(request, 'type_in.html', {'form_text': form})
