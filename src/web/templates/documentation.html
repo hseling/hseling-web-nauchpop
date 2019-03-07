@@ -14,17 +14,17 @@
 <body>
     <div class="container-fluid">
             <div class="row">
-                  <h1>Popular Science Text Analysis Service</h1>
+                  <h1>Анализатор Научно-Популярных Текстов</h1>
       
                 </div>
                 <div class="row">
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
                           <ul class="nav navbar-nav">
-                            <li><a href="./">Home</a></li>
-                            <li><a href="about">About the project</a></li>
-                            <li class="active"><a href="#">API Documentation</a></li>
-                            <li><a href="contact">Contact</a></li>
+                            <li><a href="./">Главная</a></li>
+                            <li><a href="about">О проекте</a></li>
+                            <li class="active"><a href="#">Документация</a></li>
+                            <li><a href="contact">Контакты</a></li>
                           </ul>
                         </div>
                   </nav>
@@ -34,40 +34,60 @@
             <div class="row">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-8">
-                  <h2>Project Documentation</h2>
-                  <h3>NER module</h3> 
+                  <h2>Документация API</h2>
                    <p>
-                       <i>Module description</i>
-                  </p>
-                  <h3>Readability module</h3> 
-                   <p>
-                       <i>Module description</i>
-                  </p> 
-
-                  <h3>Term extraction module</h3> 
-                  <p>
-                      <i>Module description</i>
-                 </p>
-                 <h3>Topic modeling module</h3> 
-                  <p>
-                      <i>Module description</i>
-                 </p> 
+                      Анализатор можно использовать с помощью запросов к API.
+                   </p>
+                   <ol>
+                     <li>Для загрузки файла необходимо отправить <span class="query">POST</span> запрос по ссылке 
+                       <span class="query">http://0.0.0.0/upload</span>.</li>
+                     <li>Для запуска обработки файла отправляется <span class="query">POST</span> запрос по ссылке 
+                       <span class="query">http://0.0.0.0/process/<имя файла></span>, 
+                       в параметре <span class="query">data</span> необходимо указать названия модулей обработки 
+                       текста:
+                        <ul style="list-style: none; ">
+                          <li>
+                            <b>ner</b> - Извлечение имен ученых; 
+                          </li> 
+                          <li>
+                            <b>topic</b> - Определение тематики;  
+                          </li>                       
+                          <li>
+                            <b>rb</b> - Определение метрик ридабилити;  
+                          </li> 
+                          <li>
+                            <b>term</b> - Извлечение терминов.
+                          </li>
+                        </ul>                    
+                      Названия перечисляются в одно строковое значение (например, 
+                      <span class="query">'topic,term'</span>).</li>
+                     <li>В ответе на этот запрос возвращается список <span class="query">task_id</span> в формате <span class="query">json</span>.</li>
+                     <li>Для каждого <span class="query">task_id</span> происходит выполнение задания по обработке текста. 
+                        По ссылке <span class="query">http://0.0.0.0/status/<task_id></span> отображаются данные о статусе выполнения задания.
+                        После получения статуса "SUCCESS" по этому же запросу возвращается имя обработанного 
+                        файла в виде <span class="query">processed/<task_id>.txt</span> 
+                        (например, <span class="query">processed/70d2a667-8910-4e98-835d-1545b67caab8.txt</span>).</li>
+                      <li>По ссылке <span class="query">http://0.0.0.0/files/<имя обработанного файла></span> отображается результат
+                        выполнения задания.</li>
+                   </ol>
                 </div>
             </div>
             </div>
 
 
 
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
-            <div class="col-12 col-md" align="center">
-              <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
-  
-  
+            <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <footer>
+                        <small class="d-block mb-3 text-muted">&copy; 2018 <a href="https://linghub.ru/">HSE School of Linguistics</a></small>        
+                    </footer>
+                </div>
+                <div class="col-sm-4"></div>
             </div>
-        </footer>
 
 </body>
 <script src="{% static "node_modules/jquery/dist/jquery.min.js" %}"></script>
 <script src="{% static "node_modules/bootstrap/dist/js/bootstrap.min.js" %}"></script>
-<script src="{% static "main.js" %}"></script>
+<!--<script src="{% static "main.js" %}"></script>-->
 </html>

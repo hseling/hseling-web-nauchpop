@@ -1,5 +1,18 @@
 {% extends 'base.html' %}
-{% block content %}
-<a href="upload" class="btn btn-primary active btn-lg" >Upload files</a></p>
-{% endblock %}
-
+<div class="container-fluid">
+        <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-5" id="submit_file">
+                        {% block content %}
+                        <a href="upload" class="btn btn-primary active btn-lg" >Загрузить файл</a></p>
+                        {% endblock %}
+                </div>
+                <div class="col-sm-1">
+                </div>
+                <div class="col-sm-5" id="submit_text">
+                        {% block window %}
+                        <a href="type_in" class="btn btn-primary active btn-lg" >Ввести текст</a></p>
+                        {% endblock %}
+                </div>
+            </div>
+</div>

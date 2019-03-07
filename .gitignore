@@ -104,3 +104,7 @@ ENV/
 
 # JavaScript
 node_modules
+.idea/
+src/tmp/
+src/temporary.txt
+src/test.txt
