@@ -25,7 +25,7 @@ function get_status(task_id)
 {
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
-          $(".lead").append('<p>' + data.result + '</p>');
+          $(".lead").append('<p><b>' + prettifyModuleNames(data.result) + '</b></p>');
           $(".raw").append('<p>' + data.raw + '</p>');
         } else {
           setTimeout(get_status, 2000);
@@ -41,3 +41,10 @@ $(function () {
         get_status(taskIds[i]);
     }
 });
+
+function prettifyModuleNames(processedFileName){
+    var moduleNames = {topic: "Тематика", ner: "Имена ученых", rb: "Ридабилити", term:"Термины"} ;
+    var pattern = /processed\/([a-z]+)_/g ;
+    var match = pattern.exec(processedFileName);
+    return moduleNames[match[1]];
+}
