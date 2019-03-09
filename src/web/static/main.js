@@ -6,9 +6,9 @@ function getTaskIds()
         params = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
     for(var i = 0; i < params.length; i++)
     {
-        var param = params[i].split('='),
-            key = param[0],
-            value = param[1].split(',');
+        var param = params[i].split('=');
+        var key = param[0];
+        var value = param[1].split(',');
 
         if (key == 'task_id') {
 
@@ -25,10 +25,12 @@ function get_status(task_id)
 {
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
-          $(".lead").append('<p><b>' + prettifyModuleNames(data.result) + '</b></p>');
-          $(".raw").append('<p>' + data.raw + '</p>');
+            if(prettifyModuleNames(data.result)=='Ридабилити'){
+                $(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw"><p>' + prettifyRbResult(data.raw) + '</p></td></tr>')
+
+            } else {$(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw"><p>' + data.raw + '</p></td></tr>')} ;
         } else {
-          setTimeout(get_status, 2000);
+          setTimeout(get_status, 1000, task_id);
         }
       });
 };
@@ -47,4 +49,13 @@ function prettifyModuleNames(processedFileName){
     var pattern = /processed\/([a-z]+)_/g ;
     var match = pattern.exec(processedFileName);
     return moduleNames[match[1]];
+}
+
+function prettifyRbResult(rbResult){
+    var pattern = /(\d+\.\d+|\d+)(\s)/gm ;
+    var numbers = rbResult.match(pattern);
+    for(i=0; i < numbers.length; i++){
+        rbResult = rbResult.replace(numbers[i], numbers[i]+'\n');
+    };
+    return rbResult;
 }
