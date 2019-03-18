@@ -55,7 +55,7 @@ function prettifyRbResult(rbResult){
     var pattern = /(\d+\.\d+|\d+)(\s)/gm ;
     var numbers = rbResult.match(pattern);
     for(i=0; i < numbers.length; i++){
-        rbResult = rbResult.replace(numbers[i], '<br>'+ numbers[i]+ '<br>');
+        rbResult = rbResult.replace(numbers[i], numbers[i]+ '<br>');
     };
     return rbResult;
 }
