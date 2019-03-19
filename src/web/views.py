@@ -57,14 +57,21 @@ def web_status(request):
 
 def handle_uploaded_file(f, modules):
 
-    files = {'file': f}
+    # files = {'file[]': list(f)}
+    files = {'file[]': f}
     url = HSE_API_ROOT + "upload"
     content = requests.post(url, files=files)
-    file_id = content.json().get("file_id")
+    find_file_id = content.json()
+    file_ids = list()
+    for num in range(len(find_file_id)):
+        file_id = find_file_id[str(num)]['file_id']
+        file_ids.append(file_id)
 
-    if file_id:
-        file_id = file_id[7:]
-        url = HSE_API_ROOT + "process/" + file_id
+    if file_ids:
+        file_ids = [file_id[7:] for file_id in file_ids]
+        file_ids = ",".join(file_ids)
+            # file_id = file_id[7:]
+        url = HSE_API_ROOT + "process/" + file_ids
         content = requests.post(url, data=modules)
 
 
@@ -75,7 +82,7 @@ def handle_uploaded_file(f, modules):
     return response
 
 def handle_text(modules):
-    files = {'file': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
+    files = {'file[]': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
     url = HSE_API_ROOT + "upload"
     content = requests.post(url, files=files)
     file_id = content.json().get("file_id")
@@ -100,7 +107,8 @@ def web_upload_file(request):
             modules = list(filter(lambda t: t[0] in form.cleaned_data['modules'], form.fields['modules'].choices))
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
-            task_ids = handle_uploaded_file(request.FILES['file'], modules)
+            files = request.FILES.getlist('file')
+            task_ids = handle_uploaded_file(files, modules)
             task_ids = ','.join(task_ids)
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
