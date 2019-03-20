@@ -7,6 +7,8 @@ ENV DJANGO_SECRET_KEY $django_secret_key
 RUN apk add --update python3 pytest
 RUN apk add --update postgresql-libs
 RUN apk add --update curl
+# Add node.js
+RUN apk add --update nodejs nodejs-npm
 # Add envsubts
 RUN apk add --update gettext
 # Add nginx
@@ -60,12 +62,15 @@ RUN apk add --no-cache --virtual .build-deps \
 
 ADD ./docker/server/uwsgi.ini.template /opt/server
 ADD ./docker/server/nginx.conf.template /opt/server
+ADD ./docker/server/uwsgilog.ini.template /opt/server
+ADD ./docker/server/nginxlog.conf.template /opt/server
 ADD ./docker/server/start_server.sh /opt/server
 
 # Add code
 ADD ./src/ /opt/code/
 
 # Generate static files
+RUN cd web/static; npm install .; cd ../..
 RUN python3 manage.py collectstatic
 
 EXPOSE 80

@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from .forms import UploadFileForm
@@ -15,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 
-HSE_API_ROOT = "http://hse-api-web/"
+HSE_API_ROOT = os.environ.get("HSELING_API_ROOT", "http://hse-api-web/")
 
 
 def web_index(request):
