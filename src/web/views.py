@@ -27,6 +27,10 @@ def web_about(request):
     return render(request, 'about.html',
                   context={})
 
+def web_research(request):
+    return render(request, 'research.html',
+                  context={})
+
 def web_documentation(request):
     return render(request, 'documentation.html',
                   context={})
