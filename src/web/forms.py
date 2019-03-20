@@ -9,7 +9,7 @@ MODULE_CHOICES = (
 )
 
 class UploadFileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
     modules = forms.MultipleChoiceField(required=False,
                                         widget=forms.CheckboxSelectMultiple,
                                         choices=MODULE_CHOICES)
