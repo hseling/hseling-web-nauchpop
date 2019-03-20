@@ -4,6 +4,8 @@ from .forms import UploadFileForm
 from .forms import TypeInTextForm
 from django.views.decorators.csrf import csrf_protect
 from django.core.files import File
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from io import BytesIO
 # from .forms import FileFieldForm
 # from django.views.generic.edit import FormView
@@ -58,9 +60,9 @@ def web_status(request):
 def handle_uploaded_file(f, modules):
 
     # files = {'file[]': list(f)}
-    files = {'file[]': f}
+    # files = {'file[]': f}
     url = HSE_API_ROOT + "upload"
-    content = requests.post(url, files=files)
+    content = requests.post(url, files=f)
     find_file_id = content.json()
     file_ids = list()
     for num in range(len(find_file_id)):
@@ -81,11 +83,21 @@ def handle_uploaded_file(f, modules):
 
     return response
 
+
+def delete_temp_files(path_lst):
+    '''fuction to clean data storage after sending files to api'''
+
+    for path in path_lst:
+        if default_storage.exists(path):
+            default_storage.delete(path)
+
+
 def handle_text(modules):
     files = {'file[]': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
     url = HSE_API_ROOT + "upload"
     content = requests.post(url, files=files)
-    file_id = content.json().get("file_id")
+    find_file_id = content.json()
+    file_id = find_file_id['0']['file_id']
 
     if file_id:
         file_id = file_id[7:]
@@ -108,7 +120,13 @@ def web_upload_file(request):
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
             files = request.FILES.getlist('file')
-            task_ids = handle_uploaded_file(files, modules)
+            filenames = [file.name for file in files]
+            [default_storage.save(file.name, ContentFile(file.read())) for file in files]
+            multiple_files = [('file[]', open(settings.MEDIA_ROOT +
+                                              filename, 'rb')) for filename in filenames]
+            task_ids = handle_uploaded_file(multiple_files, modules)
+            path_lst_temp_files = [str(settings.MEDIA_ROOT + filename) for filename in filenames]
+            delete_temp_files(path_lst_temp_files)
             task_ids = ','.join(task_ids)
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
