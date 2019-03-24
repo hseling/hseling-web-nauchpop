@@ -29,7 +29,7 @@ RUN if ls /opt/vendor/*.whl 1> /dev/null 2>&1; then pip3 install /opt/vendor/*.w
 # Add uwsgi and nginx configuration
 RUN mkdir -p /opt/server
 RUN mkdir -p /opt/static
-RUN mkdir -p /opt/media
+RUN mkdir -p /opt/media && chmod a+rwx /opt/media/
 
 # Add fix for stack for Python3.6
 ADD ./docker/server/stack-fix.c /opt/server

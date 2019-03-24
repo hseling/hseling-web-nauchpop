@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^type_in$', views.web_type_in, name='type_in'),
     url(r'^status$', views.web_status, name='status'),
     url(r'^about$', views.web_about, name='about'),
+    url(r'^research$', views.web_research, name='research'),
     url(r'^documentation$', views.web_documentation, name='documentation'),
     url(r'^contact$', views.web_contact, name='contact') 
 ]

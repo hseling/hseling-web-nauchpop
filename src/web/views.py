@@ -6,6 +6,8 @@ from .forms import UploadFileForm
 from .forms import TypeInTextForm
 from django.views.decorators.csrf import csrf_protect
 from django.core.files import File
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from io import BytesIO
 # from .forms import FileFieldForm
 # from django.views.generic.edit import FormView
@@ -27,6 +29,10 @@ def web_index(request):
 
 def web_about(request):
     return render(request, 'about.html',
+                  context={})
+
+def web_research(request):
+    return render(request, 'research.html',
                   context={})
 
 def web_documentation(request):
@@ -59,14 +65,21 @@ def web_status(request):
 
 def handle_uploaded_file(f, modules):
 
-    files = {'file': f}
+    # files = {'file[]': list(f)}
+    # files = {'file[]': f}
     url = HSE_API_ROOT + "upload"
-    content = requests.post(url, files=files)
-    file_id = content.json().get("file_id")
+    content = requests.post(url, files=f)
+    find_file_id = content.json()
+    file_ids = list()
+    for num in range(len(find_file_id)):
+        file_id = find_file_id[str(num)]['file_id']
+        file_ids.append(file_id)
 
-    if file_id:
-        file_id = file_id[7:]
-        url = HSE_API_ROOT + "process/" + file_id
+    if file_ids:
+        file_ids = [file_id[7:] for file_id in file_ids]
+        file_ids = ",".join(file_ids)
+            # file_id = file_id[7:]
+        url = HSE_API_ROOT + "process/" + file_ids
         content = requests.post(url, data=modules)
 
 
@@ -76,11 +89,21 @@ def handle_uploaded_file(f, modules):
 
     return response
 
+
+def delete_temp_files(path_lst):
+    '''fuction to clean data storage after sending files to api'''
+
+    for path in path_lst:
+        if default_storage.exists(path):
+            default_storage.delete(path)
+
+
 def handle_text(modules):
-    files = {'file': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
+    files = {'file[]': open(settings.MEDIA_ROOT + 'temporary.txt', 'rb')}
     url = HSE_API_ROOT + "upload"
     content = requests.post(url, files=files)
-    file_id = content.json().get("file_id")
+    find_file_id = content.json()
+    file_id = find_file_id['0']['file_id']
 
     if file_id:
         file_id = file_id[7:]
@@ -102,7 +125,14 @@ def web_upload_file(request):
             modules = list(filter(lambda t: t[0] in form.cleaned_data['modules'], form.fields['modules'].choices))
             modules = [f[0] for f in modules]
             modules = ','.join(modules)
-            task_ids = handle_uploaded_file(request.FILES['file'], modules)
+            files = request.FILES.getlist('file')
+            filenames = [file.name for file in files]
+            [default_storage.save(file.name, ContentFile(file.read())) for file in files]
+            multiple_files = [('file[]', open(settings.MEDIA_ROOT +
+                                              filename, 'rb')) for filename in filenames]
+            task_ids = handle_uploaded_file(multiple_files, modules)
+            path_lst_temp_files = [str(settings.MEDIA_ROOT + filename) for filename in filenames]
+            delete_temp_files(path_lst_temp_files)
             task_ids = ','.join(task_ids)
             return HttpResponseRedirect('main?task_id=' + str(task_ids))
     else:
