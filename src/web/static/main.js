@@ -37,6 +37,25 @@ function get_status(task_id)
       });
 }
 
+var template = `
+{{#api_results}}
+    <tr>
+        <th><b>Имя файла</b></th>
+        <th><b>Имена ученых</b></th>
+        <th><b>Тематика</b></th>
+        <th><b>Ридабилити</b></th>
+        <th><b>Термины</b></td>
+    </tr>
+    <tr>
+        <td>{{file}}</td>
+        <td>{{ner}}</td>
+        <td>{{topic}}</td>
+        <td>{{rb}}</td>
+        <td>{{term}}</td>
+    </tr> 
+{{/api_results}}
+`;
+
 
 $(function () {
   var taskIds = getTaskIds();
@@ -57,24 +76,11 @@ $(function () {
         error: function() {
           console.log("POST JSONs status Error");
         },
-        success: function() {
-          console.log("POST JSONs status OK");
+        success: function(data) {
+            var view = data;
+            var output = Mustache.render(template, view);
+            $(".api-result").append(output);
+            console.log("POST JSONs status OK");
         }
       });
 });
-
-function prettifyModuleNames(processedFileName){
-    var moduleNames = {topic: "Тематика", ner: "Имена ученых", rb: "Ридабилити", term:"Термины"} ;
-    var pattern = /processed\/([a-z]+)_/g ;
-    var match = pattern.exec(processedFileName);
-    return moduleNames[match[1]];
-}
-
-function prettifyRbResult(rbResult){
-    var pattern = /(\d+\.\d+|\d+)(\s)/gm ;
-    var numbers = rbResult.match(pattern);
-    for(i=0; i < numbers.length; i++){
-        rbResult = rbResult.replace(numbers[i], numbers[i]+ '<br>');
-    };
-    return rbResult;
-}
