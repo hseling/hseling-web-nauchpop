@@ -46,7 +46,6 @@ def web_main(request):
     return render(request, 'main.html',
                   context={})
 
-# context={"status": request.GET.get('status')}
 
 def web_status(request):
     task_id = request.GET.get('task_id')
@@ -62,9 +61,6 @@ def web_status(request):
 
 
 def handle_uploaded_file(f, modules):
-
-    # files = {'file[]': list(f)}
-    # files = {'file[]': f}
     url = HSE_API_ROOT + "upload"
     content = requests.post(url, files=f)
     find_file_id = content.json()
@@ -76,7 +72,6 @@ def handle_uploaded_file(f, modules):
     if file_ids:
         file_ids = [file_id[7:] for file_id in file_ids]
         file_ids = ",".join(file_ids)
-            # file_id = file_id[7:]
         url = HSE_API_ROOT + "process/" + file_ids
         content = requests.post(url, data=modules)
 
