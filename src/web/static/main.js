@@ -39,9 +39,26 @@ function get_status(task_id)
 $(function () {
   var taskIds = getTaskIds();
   console.log(taskIds);
+  var jsonsToParse = [];
     for (var i = 0; i < taskIds.length; i++) {
-        get_status(taskIds[i]);
+        jsonsToParse.push(get_status(taskIds[i]));
     }
+    var url = window.location.href.slice(window.location.href.indexOf('?') + 1);
+    url = url.split('/').pop(-1).join('/') + 'result';
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(jsonsToParse),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        error: function() {
+          console.log("POST JSONs status Error");
+        },
+        success: function() {
+          console.log("POST JSONs status OK");
+        }
+      });
 });
 
 function prettifyModuleNames(processedFileName){
