@@ -10,12 +10,12 @@ MODULE_CHOICES = (
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
-    modules = forms.MultipleChoiceField(required=False,
+    modules = forms.MultipleChoiceField(required=True,
                                         widget=forms.CheckboxSelectMultiple,
                                         choices=MODULE_CHOICES)
 
 class TypeInTextForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(attrs={'rows':10, 'cols':60, 'placeholder':'Введите текст', 'class':'form-control'}), required=False, max_length=6000)
-    modules = forms.MultipleChoiceField(required=False,
+    text = forms.CharField(widget=forms.Textarea(attrs={'rows':10, 'cols':60, 'placeholder':'Введите текст', 'class':'form-control'}), required=True, max_length=6000)
+    modules = forms.MultipleChoiceField(required=True,
                                         widget=forms.CheckboxSelectMultiple,
                                         choices=MODULE_CHOICES)
