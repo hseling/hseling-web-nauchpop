@@ -12,6 +12,8 @@ from io import BytesIO
 from templatesite import settings
 import requests
 import logging
+import re
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +48,38 @@ def web_main(request):
     return render(request, 'main.html',
                   context={})
 
+
+def get_names(lst_of_jsons):
+    file_strings = [file.get('result', [""])[0] for file in lst_of_jsons]
+    modules = # регулярка для вытаскивания названий модулей, потом их используем как ключи
+    return modules
+
+# это функция, принимающая список джейсонов с js и создающая новый с нужными объектами
+# рендерит шаблон result.html
+def web_parser(request):
+  if request.method == 'POST':
+      request_obj = request.data
+      lst_of_jsons = request_obj["all_data"] # здесь все джейсоны после поллинга (макс 4 штуки)
+      raw_names = lst_of_jsons[0].get('raw')  #знам нужно получить все имена файлов
+      lst_names = raw_names.split('\n')
+      pattern = re.compile(r'\w(?=\t)')  # берем начало строк
+      file_names = [re.match(pattern, name).group(0) for name in lst_names] #здесь все имена файлов
+
+      new_dict = {}
+      modules = get_names(lst_of_jsons)
+      modules.append('file') # добавляем ключ file, чтобы в итоговом джейсоне под ним были названия
+      for module in modules:
+        for json in lst_of_jsons:
+          if module in json.get('result', [""])[0]:
+
+
+
+
+    return JsonResponse(new_json)
+
+
+
+# context={"status": request.GET.get('status')}
 
 def web_status(request):
     task_id = request.GET.get('task_id')

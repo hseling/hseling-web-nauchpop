@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^about$', views.web_about, name='about'),
     url(r'^research$', views.web_research, name='research'),
     url(r'^documentation$', views.web_documentation, name='documentation'),
-    url(r'^contact$', views.web_contact, name='contact') 
+    url(r'^contact$', views.web_contact, name='contact'),
+    url(r'^result$', views.web_parser, name='result')
 ]
