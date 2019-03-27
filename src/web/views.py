@@ -72,60 +72,61 @@ def parse_json(obj): # чтобы собрать словарь из назва�
     return dict(zip(file_names, results_only))
 
 # это функция, принимающая список джейсонов с js и создающая новый с нужными объектами
+@csrf_protect
 def web_parser(request):
-  if request.method == 'POST':
-      request_obj = request.data
-      lst_of_jsons = request_obj["all_data"] # здесь все джейсоны после поллинга (макс 4 штуки)
-      raw_names = lst_of_jsons[0].get('raw')  #нам нужно получить все имена файлов
-      lst_names = raw_names.split('\n')
-      pattern = re.compile(r'\w+\.\w+(?=\t)')  # берем начало строк
-      file_names = [re.match(pattern, name)[0] for name in lst_names]  # здесь все имена файлов
+    if request.method == 'POST':
+        lst_of_jsons = request.data
+        # lst_of_jsons = request_obj["all_data"] # здесь все джейсоны после поллинга (макс 4 штуки)
+        raw_names = lst_of_jsons[0].get('raw')  #нам нужно получить все имена файлов
+        lst_names = raw_names.split('\n')
+        pattern = re.compile(r'\w+\.\w+(?=\t)')  # берем начало строк
+        file_names = [re.match(pattern, name)[0] for name in lst_names]  # здесь все имена файлов
 
-      # new_dict = {}
-      # modules = get_names(lst_of_jsons)
-      # modules.append('file') # добавляем ключ file, чтобы в итоговом джейсоне под ним были названия
-      full_lst = []
-      for obj in lst_of_jsons:
-          if find_module(obj) == 'ner':
-              ner = parse_json(obj)
-              header_ner = ('ner', ner)
-              full_lst.append(header_ner)
-          elif find_module(obj) == 'topic':
-              topic = parse_json(obj)
-              header_topic = ('topic', topic)
-              full_lst.append(header_topic)
-          elif find_module(obj) == 'rb':
-              rb = parse_json(obj)
-              header_rb = ('rb', rb)
-              full_lst.append(header_rb)
-          else:
-              term = parse_json(obj)
-              header_term = ('term', term)
-              full_lst.append(header_term)
+        # new_dict = {}
+        # modules = get_names(lst_of_jsons)
+        # modules.append('file') # добавляем ключ file, чтобы в итоговом джейсоне под ним были названия
+        full_lst = []
+        for obj in lst_of_jsons:
+            if find_module(obj) == 'ner':
+                ner = parse_json(obj)
+                header_ner = ('ner', ner)
+                full_lst.append(header_ner)
+            elif find_module(obj) == 'topic':
+                topic = parse_json(obj)
+                header_topic = ('topic', topic)
+                full_lst.append(header_topic)
+            elif find_module(obj) == 'rb':
+                rb = parse_json(obj)
+                header_rb = ('rb', rb)
+                full_lst.append(header_rb)
+            else:
+                term = parse_json(obj)
+                header_term = ('term', term)
+                full_lst.append(header_term)
 
-      headers = ['file', 'ner', 'topic', 'rb', 'term']
-      final_list = []
-      add_list = []
-      for filename in file_names:
-          dct = {'file': str(filename)} # создаем каркас из списка со словарями, в которых пока будет лежать только {file: filename}
-          final_list.append(dct)        # потом мы туда добавим остальные ключи
-      new_dict = {}
-      for dct in final_list: # эта шняга проходится по каждому словарю, который мы слепили выше
-          for key,val in dct.items(): # мы
-              for entity in full_lst:
-                  if entity[0] in headers:
-                      for k, v in entity[1].items():
-                          if k == key:
-                              new_dict = {str(entity[0]): v}
-                  else:
-                      add_list.append(entity[0])
-          dct.update(new_dict)
-      if add_list:
-          for dct in final_list:
-              for header in add_list:
-                  add_dict = {str(header): '\n'}
-                  dct.update(add_dict)
-      return JsonResponse({'api_result': final_list})
+        headers = ['file', 'ner', 'topic', 'rb', 'term']
+        final_list = []
+        add_list = []
+        for filename in file_names:
+            dct = {'file': str(filename)} # создаем каркас из списка со словарями, в которых пока будет лежать только {file: filename}
+            final_list.append(dct)        # потом мы туда добавим остальные ключи
+        new_dict = {}
+        for dct in final_list: # эта шняга проходится по каждому словарю, который мы слепили выше
+            for key,val in dct.items(): # мы
+                for entity in full_lst:
+                    if entity[0] in headers:
+                        for k, v in entity[1].items():
+                            if k == key:
+                                new_dict = {str(entity[0]): v}
+                    else:
+                        add_list.append(entity[0])
+            dct.update(new_dict)
+        if add_list:
+            for dct in final_list:
+                for header in add_list:
+                    add_dict = {str(header): '\n'}
+                    dct.update(add_dict)
+        return JsonResponse({'api_result': final_list})
 
 
 

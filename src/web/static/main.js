@@ -26,6 +26,7 @@ function get_status(task_id)
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
             $("i").hide();
+            console.log(data);
             return data
         } else {
             $("i").show();
@@ -61,13 +62,15 @@ $(function () {
     for (var i = 0; i < taskIds.length; i++) {
         jsonsToParse.push(get_status(taskIds[i]));
     }
-    var url = window.location.href.slice(window.location.href.indexOf('?') + 1);
-    url = url.split('/').pop(-1).join('/') + 'result';
-
+    var url = 'http://localhost:8000/web/result';
+    // var url = window.location.href.slice(window.location.href.indexOf('?') + 1);
+    //     url = url.split('/').pop(-1).join('/') + 'result';
+    console.log(url);
+    console.log(jsonsToParse);
     $.ajax({
         type: "POST",
         url: url,
-        data: JSON.stringify(jsonsToPardocse),
+        data: JSON.stringify(jsonsToParse),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: function() {
