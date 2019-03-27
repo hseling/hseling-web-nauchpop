@@ -26,10 +26,7 @@ function get_status(task_id)
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
             $("i").hide();
-            if(prettifyModuleNames(data.result)=='Ридабилити'){
-                $(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw">' + prettifyRbResult(data.raw) + '</td></tr>')
-
-            } else {$(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw"><p>' + data.raw + '</p></td></tr>')}
+            return data
         } else {
             $("i").show();
             setTimeout(get_status, 1000, task_id);
