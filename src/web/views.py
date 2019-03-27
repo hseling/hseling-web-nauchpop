@@ -77,6 +77,7 @@ def web_parser(request):
     if request.method == 'POST':
         lst_of_jsons = request.data
         # lst_of_jsons = request_obj["all_data"] # здесь все джейсоны после поллинга (макс 4 штуки)
+        lst_of_jsons = lst_of_jsons.json()
         raw_names = lst_of_jsons[0].get('raw')  #нам нужно получить все имена файлов
         lst_names = raw_names.split('\n')
         pattern = re.compile(r'\w+\.\w+(?=\t)')  # берем начало строк
@@ -127,6 +128,8 @@ def web_parser(request):
                     add_dict = {str(header): '\n'}
                     dct.update(add_dict)
         return JsonResponse({'api_result': final_list})
+    else:
+        return JsonResponse({"error": "No data"})
 
 
 
