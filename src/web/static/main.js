@@ -17,23 +17,56 @@ function getTaskIds()
             }
         }
     }
+    console.log('Got taskIds', rtn);
     return rtn;
 }
 
 
+async function getStatusNew(taskId){
+    console.log('getting task ID',  taskId);
+    var complete = new Promise(function(resolve, reject){
+
+        async function retry(){
+            console.log('ENTER RETRY')
+            data = await $.get("/web/status?task_id="+taskId);
+            console.log('GOT DATA', data);
+            if (data.ready){
+                console.log(`task ID ${taskId} ready`)
+                resolve(data)
+            } else {
+                console.log(`Waiting task ID ${taskId}`);
+                setTimeout(retry, 2000);
+            }
+        }
+        console.log('BEFORE RETRY')
+        retry()
+    })
+    return complete;
+}
+
+async function getAllStatuses(taskIds){
+    statuses = [];
+    for (const taskId of taskIds){
+        statuses.push(getStatusNew(taskId));
+    }
+    return await Promise.all(statuses);
+}
+
+/*
 function get_status(task_id)
 {
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
             $("i").hide();
-            console.log(data);
-            return data
+            console.log(data)
+            
         } else {
             $("i").show();
             setTimeout(get_status, 1000, task_id);
         }
       });
 }
+*/
 
 var template = `
 {{#api_results}}
@@ -55,22 +88,21 @@ var template = `
 `;
 
 
-$(function () {
-  var taskIds = getTaskIds();
-  console.log(taskIds);
-  var jsonsToParse = [];
-    for (var i = 0; i < taskIds.length; i++) {
-        jsonsToParse.push(get_status(taskIds[i]));
-    }
+$(async function () {
+    var taskIds = getTaskIds();
+    console.log('Got before await', taskIds);
+    results = await getAllStatuses(taskIds);
+    var jsonsToParse = [];
+
+    for (const result of results){
+        jsonsToParse.push(result);
+    }    
     var url = 'http://localhost:8000/web/result';
-    // var url = window.location.href.slice(window.location.href.indexOf('?') + 1);
-    //     url = url.split('/').pop(-1).join('/') + 'result';
-    console.log(url);
-    console.log(jsonsToParse);
+       
     $.ajax({
         type: "POST",
         url: url,
-        data: JSON.stringify(jsonsToParse),
+        data: jsonsToParse,
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: function() {
