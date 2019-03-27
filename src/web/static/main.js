@@ -89,6 +89,7 @@ var template = `
 
 
 $(async function () {
+    $("i").show();
     var taskIds = getTaskIds();
     console.log('Got before await', taskIds);
     results = await getAllStatuses(taskIds);
@@ -109,6 +110,7 @@ $(async function () {
           console.log("POST JSONs status Error");
         },
         success: function(data) {
+            $("i").hide();
             var view = data;
             var output = Mustache.render(template, view);
             $(".api-result").append(output);
