@@ -17,45 +17,109 @@ function getTaskIds()
             }
         }
     }
+    console.log('Got taskIds', rtn);
     return rtn;
 }
 
 
+async function getStatusNew(taskId){
+    console.log('getting task ID',  taskId);
+    var complete = new Promise(function(resolve, reject){
+
+        async function retry(){
+            console.log('ENTER RETRY')
+            data = await $.get("/web/status?task_id="+taskId);
+            console.log('GOT DATA', data);
+            if (data.ready){
+                console.log(`task ID ${taskId} ready`)
+                resolve(data)
+            } else {
+                console.log(`Waiting task ID ${taskId}`);
+                setTimeout(retry, 2000);
+            }
+        }
+        console.log('BEFORE RETRY')
+        retry()
+    })
+    return complete;
+}
+
+async function getAllStatuses(taskIds){
+    statuses = [];
+    for (const taskId of taskIds){
+        statuses.push(getStatusNew(taskId));
+    }
+    return await Promise.all(statuses);
+}
+
+/*
 function get_status(task_id)
 {
     $.get("/web/status?task_id=" + task_id, function(data) {
         if (data.ready) {
-            if(prettifyModuleNames(data.result)=='Ридабилити'){       
-                $(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw">' + prettifyRbResult(data.raw) + '</td></tr>')
-
-            } else {$(".api-result").append('<tr><td class="lead"><p><b>' + prettifyModuleNames(data.result) + '</b></p></td>' + '<td class="raw"><p>' + data.raw + '</p></td></tr>')}
+            $("i").hide();
+            console.log(data)
+            
         } else {
-          setTimeout(get_status, 1000, task_id);
+            $("i").show();
+            setTimeout(get_status, 1000, task_id);
         }
       });
 }
+*/
 
+var template = `
+{{#api_result}}
+    <tr>
+        <th><b>Имя файла</b></th>
+        <th><b>Имена ученых</b></th>
+        <th><b>Тематика</b></th>
+        <th><b>Ридабилити</b></th>
+        <th><b>Термины</b></th>
+    </tr>
+    <tr>
+        <td>{{file}}</td>
+        <td>{{ner}}</td>
+        <td>{{topic}}</td>
+        <td>{{rb}}</td>
+        <td>{{term}}</td>
+    </tr> 
+{{/api_result}}
+`;
 
-$(function () {
-  var taskIds = getTaskIds();
-  console.log(taskIds);
-    for (var i = 0; i < taskIds.length; i++) {
-        get_status(taskIds[i]);
-    }
+var view2 = {"api_result": [{"file": "1.txt", "ner": "dgdfgdrr", "topic": "gdaggsdg", "term": "gdfgjdfgdf", "rb": "dsflnjkkdsfljkfdsdsnk;fds"}]};
+
+$(async function () {
+    $("i").show();
+    var taskIds = getTaskIds();
+    console.log('Got before await', taskIds);
+    results = await getAllStatuses(taskIds);
+    var jsonsToParse = [];
+
+    for (const result of results){
+        jsonsToParse.push(result);
+    }    
+    var url = '/web/result';
+    dict = {};
+    dict['all_data'] = jsonsToParse;
+    console.log(dict);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(dict),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        error: function() {
+          console.log("POST JSONs status Error");
+        },
+        success: function(data) {
+            $("i").hide();
+            var view = data;
+            console.log(data);
+            var output = Mustache.render(template, view);
+            console.log(output);
+            $(".api_result").append(output);
+            console.log("POST JSONs status OK");
+        }
+      });
 });
-
-function prettifyModuleNames(processedFileName){
-    var moduleNames = {topic: "Тематика", ner: "Имена ученых", rb: "Ридабилити", term:"Термины"} ;
-    var pattern = /processed\/([a-z]+)_/g ;
-    var match = pattern.exec(processedFileName);
-    return moduleNames[match[1]];
-}
-
-function prettifyRbResult(rbResult){
-    var pattern = /(\d+\.\d+|\d+)(\s)/gm ;
-    var numbers = rbResult.match(pattern);
-    for(i=0; i < numbers.length; i++){
-        rbResult = rbResult.replace(numbers[i], numbers[i]+ '<br>');
-    };
-    return rbResult;
-}
