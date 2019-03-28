@@ -75,7 +75,7 @@ var template = `
         <th><b>Имена ученых</b></th>
         <th><b>Тематика</b></th>
         <th><b>Ридабилити</b></th>
-        <th><b>Термины</b></td>
+        <th><b>Термины</b></th>
     </tr>
     <tr>
         <td>{{file}}</td>
@@ -98,12 +98,14 @@ $(async function () {
     for (const result of results){
         jsonsToParse.push(result);
     }    
-    var url = 'http://localhost:8000/web/result';
-       
+    var url = '/web/result';
+    dict = {};
+    dict['all_data'] = jsonsToParse;
+    console.log(dict);
     $.ajax({
         type: "POST",
         url: url,
-        data: jsonsToParse,
+        data: JSON.stringify(dict),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         error: function() {
@@ -112,8 +114,9 @@ $(async function () {
         success: function(data) {
             $("i").hide();
             var view = data;
+            console.log(data);
             var output = Mustache.render(template, view);
-            $(".api-result").append(output);
+            $(".api_result").append(output);
             console.log("POST JSONs status OK");
         }
       });

@@ -14,7 +14,7 @@ import requests
 import logging
 import re
 import json
-
+from django.views.decorators.csrf import csrf_exempt
 logger = logging.getLogger(__name__)
 
 
@@ -49,13 +49,35 @@ def web_main(request):
                   context={})
 
 
-# def get_names(lst_of_jsons):
-#     file_strings = [file.get('result', [""])[0] for file in lst_of_jsons]
-#     regex = re.compile(r'(?<=processed\/)([a-z]+)(?=_)')
-#     modules = [re.search(regex, file)[0] for file in file_strings]
-#     # регулярка для вытаскивания названий модулей, потом их используем как ключи
-#     return modules
+def generate_template_objects(data):
+    modules = [''.join(list(data[i].keys())) for i in range(len(data))]
+    preresult = []
+    for i in range(len(data)):
+        preresult.append(list(data[i][''.join(list(data[i].keys()))].items()))
 
+    final = []
+    for i, l in zip(modules, preresult):
+        for j in l:
+            final.append(('file', j[0]))
+            final.append((i, j[1]))
+    headers = ['ner', 'topic', 'rb', 'term']
+    return stack_structure(final, headers)
+
+
+def stack_structure(final, keys):
+    objects = []
+    file_task_pairs = [[final[2*i], final[2*i+1]] for i in range(int(len(final)/2))]
+    files = list(set([pair[0][1] for pair in file_task_pairs]))
+    for file in files:
+        obj = {}
+        obj['file'] = file
+        for key in keys:
+            obj[key] = '\t'
+        file_tasks = [pair[1] for pair in file_task_pairs if pair[0][1] == file]
+        for task in file_tasks:
+            obj[task[0]] = task[1]
+        objects.append(obj)
+    return objects
 
 def find_module(obj): # чтобы найти названия модулей
     regex = re.compile(r'(?<=processed\/)([a-z]+)(?=_)')
@@ -72,61 +94,44 @@ def parse_json(obj): # чтобы собрать словарь из назва�
     return dict(zip(file_names, results_only))
 
 # это функция, принимающая список джейсонов с js и создающая новый с нужными объектами
-@csrf_protect
+@csrf_exempt
 def web_parser(request):
-    if request.method == 'POST':
-        lst_of_jsons = request.data
-        # lst_of_jsons = request_obj["all_data"] # здесь все джейсоны после поллинга (макс 4 штуки)
-        lst_of_jsons = lst_of_jsons.json()
+    if request.method == 'POST' and request.is_ajax():
+        # body_unicode = request.body
+        # logger.debug(body_unicode)
+        body_unicode = request.body.decode('utf-8') # можно без декода
+        logger.debug(body_unicode)
+        body = json.loads(body_unicode)
+        logger.debug(body)
+        lst_of_jsons = body["all_data"]
+        logger.debug(lst_of_jsons)
         raw_names = lst_of_jsons[0].get('raw')  #нам нужно получить все имена файлов
         lst_names = raw_names.split('\n')
         pattern = re.compile(r'\w+\.\w+(?=\t)')  # берем начало строк
         file_names = [re.match(pattern, name)[0] for name in lst_names]  # здесь все имена файлов
 
-        # new_dict = {}
-        # modules = get_names(lst_of_jsons)
-        # modules.append('file') # добавляем ключ file, чтобы в итоговом джейсоне под ним были названия
         full_lst = []
         for obj in lst_of_jsons:
             if find_module(obj) == 'ner':
                 ner = parse_json(obj)
-                header_ner = ('ner', ner)
+                header_ner = {'ner': ner}
                 full_lst.append(header_ner)
             elif find_module(obj) == 'topic':
                 topic = parse_json(obj)
-                header_topic = ('topic', topic)
+                header_topic = {'topic': topic}
                 full_lst.append(header_topic)
             elif find_module(obj) == 'rb':
                 rb = parse_json(obj)
-                header_rb = ('rb', rb)
+                header_rb = {'rb': rb}
                 full_lst.append(header_rb)
             else:
                 term = parse_json(obj)
-                header_term = ('term', term)
+                header_term = {'term': term}
                 full_lst.append(header_term)
 
-        headers = ['file', 'ner', 'topic', 'rb', 'term']
-        final_list = []
-        add_list = []
-        for filename in file_names:
-            dct = {'file': str(filename)} # создаем каркас из списка со словарями, в которых пока будет лежать только {file: filename}
-            final_list.append(dct)        # потом мы туда добавим остальные ключи
-        new_dict = {}
-        for dct in final_list: # эта шняга проходится по каждому словарю, который мы слепили выше
-            for key,val in dct.items(): # мы
-                for entity in full_lst:
-                    if entity[0] in headers:
-                        for k, v in entity[1].items():
-                            if k == key:
-                                new_dict = {str(entity[0]): v}
-                    else:
-                        add_list.append(entity[0])
-            dct.update(new_dict)
-        if add_list:
-            for dct in final_list:
-                for header in add_list:
-                    add_dict = {str(header): '\n'}
-                    dct.update(add_dict)
+        final_list = generate_template_objects(full_lst)
+        logger.debug(final_list)
+        logger.debug(JsonResponse({'api_result': final_list}))
         return JsonResponse({'api_result': final_list})
     else:
         return JsonResponse({"error": "No data"})
