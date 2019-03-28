@@ -130,8 +130,6 @@ def web_parser(request):
                 full_lst.append(header_term)
 
         final_list = generate_template_objects(full_lst)
-        logger.debug(final_list)
-        logger.debug(JsonResponse({'api_result': final_list}))
         return JsonResponse({'api_result': final_list})
     else:
         return JsonResponse({"error": "No data"})

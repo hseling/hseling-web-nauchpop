@@ -69,7 +69,7 @@ function get_status(task_id)
 */
 
 var template = `
-{{#api_results}}
+{{#api_result}}
     <tr>
         <th><b>Имя файла</b></th>
         <th><b>Имена ученых</b></th>
@@ -84,9 +84,10 @@ var template = `
         <td>{{rb}}</td>
         <td>{{term}}</td>
     </tr> 
-{{/api_results}}
+{{/api_result}}
 `;
 
+var view2 = {"api_result": [{"file": "1.txt", "ner": "dgdfgdrr", "topic": "gdaggsdg", "term": "gdfgjdfgdf", "rb": "dsflnjkkdsfljkfdsdsnk;fds"}]};
 
 $(async function () {
     $("i").show();
@@ -116,6 +117,7 @@ $(async function () {
             var view = data;
             console.log(data);
             var output = Mustache.render(template, view);
+            console.log(output);
             $(".api_result").append(output);
             console.log("POST JSONs status OK");
         }
